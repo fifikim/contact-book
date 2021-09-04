@@ -1,0 +1,5 @@
+.attachignore
+tariq.js
+.qualified-attach.json
+test
+node_modules
