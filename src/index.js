@@ -247,20 +247,20 @@ window.contacts = [
  The `contact` parameter is an object representing a single contact. 
 */
 
-function titleCase(city) {
-  const cityNameArr = city.split(" ");
-  let titleCaseCity = [];
-  for (let word of cityNameArr) {
-    word = word[0].toUpperCase() + word.slice(1, word.length);
-    titleCaseCity.push(word);
-  }
-  return titleCaseCity.join(" ");
-};
+// function titleCase(city) {
+//   const cityNameArr = city.split(" ");
+//   let titleCaseCity = [];
+//   for (let word of cityNameArr) {
+//     word = word[0].toUpperCase() + word.slice(1, word.length);
+//     titleCaseCity.push(word);
+//   }
+//   return titleCaseCity.join(" ");
+// };
 
 
 function renderContact(contact) {
   const { id, name, email, picture, address, phone, website, company } = contact;
-  address.city = titleCase(address.city);
+//   address.city = titleCase(address.city);
 
   const content = `
     <div class="card" data-id="${id}">
@@ -304,27 +304,23 @@ function render(contacts) {
     const content = contacts.map(renderContact).join("");
     contactSection.innerHTML = content;    
   }
-  loadCities(window.contacts); 
+  loadCities(contacts); 
 }
 
 function filterByCity(city) {
   return window.contacts.filter(contact => contact.address.city === city);
 }
 
-function filterHandler() {
-  const citySelector = document.querySelector("#filterOptions");
-
-  citySelector.addEventListener("change", (event) => {
-    event.preventDefault();
-    const selection = citySelector.value;
-
-    if (selection === 0) {
-      render(window.contacts);
-    } else {
-      const filteredContacts = filterByCity(selection);
-      render(filteredContacts);
-    };
-  })
+const filterHandler = (event) => {
+  event.preventDefault();
+  const selection = event.target.value;
+    
+  if (selection === 0) {
+    render(window.contacts);
+  } else {
+    const filteredContacts = filterByCity(selection);
+    render(filteredContacts);
+  };
 }
 
 function loadCities(contacts) {
@@ -353,23 +349,23 @@ function deleteContact(id) {
   window.contacts = window.contacts.filter(contact => contact.id != id);
 }
 
-function deleteButtonHandler() {
-  const deleteBtns = document.querySelectorAll(".deleteBtn");
-  deleteBtns.forEach(deleteBtn => {
-    deleteBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-      const deletedCardID = deleteBtn.parentElement.getAttribute("data-id");
-      deleteContact(deletedCardID);
-      render(window.contacts);
-    });
-  });
+const deleteButtonHandler = (event) => {
+  event.preventDefault();
+  const cardID = event.target.parentElement.getAttribute("data-id");
+  deleteContact(cardID);
+  render(window.contacts);
 }
 
 function main() {
   render(window.contacts);
-  filterHandler();
-  loadCities(window.contacts);
-  deleteButtonHandler();
+
+  const citySelector = document.querySelector("#filterOptions");
+  citySelector.addEventListener("change", filterHandler);
+
+  const deleteBtns = document.querySelectorAll(".deleteBtn");
+  deleteBtns.forEach(deleteBtn => {
+    deleteBtn.addEventListener("click", deleteButtonHandler);
+  });
 }
 
 window.addEventListener("DOMContentLoaded", main);
