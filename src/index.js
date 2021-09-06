@@ -2,7 +2,7 @@
 // DO NOT EDIT THIS ARRAY //
 ////////////////////////////
 /*
- The contacts array contain the list of contacts for the contact book.
+ The contacts array contains the list of contacts for the contact book.
 */
 window.contacts = [
   {
@@ -238,29 +238,30 @@ window.contacts = [
   },
 ];
 
-///////////////////////////////////
-// WRITE YOUR SOLUTION CODE HERE //
-///////////////////////////////////
+/**
+ * Converts a city name to title case
+ * @param {string} city - Name of city
+ * @return {string}
+ */
+function titleCase(city) {
+  const cityNameArr = city.split(" ");
+  let titleCaseCity = [];
+  for (let word of cityNameArr) {
+    word = word[0].toUpperCase() + word.slice(1, word.length);
+    titleCaseCity.push(word);
+  }
+  return titleCaseCity.join(" ");
+}
 
-/*
- Create and return the HTML to render a single contact card.
- The `contact` parameter is an object representing a single contact. 
-*/
-
-// function titleCase(city) {
-//   const cityNameArr = city.split(" ");
-//   let titleCaseCity = [];
-//   for (let word of cityNameArr) {
-//     word = word[0].toUpperCase() + word.slice(1, word.length);
-//     titleCaseCity.push(word);
-//   }
-//   return titleCaseCity.join(" ");
-// };
-
-
+/**
+ * Renders a single contact object
+ * @param {object} contact 
+ * @return {string} - String literal containing html
+ */
 function renderContact(contact) {
-  const { id, name, email, picture, address, phone, website, company } = contact;
-//   address.city = titleCase(address.city);
+  const { id, name, email, picture, address, phone, website, company } =
+    contact;
+  // address.city = titleCase(address.city);
 
   const content = `
     <div class="card" data-id="${id}">
@@ -296,65 +297,85 @@ function renderContact(contact) {
   return content;
 }
 
+/**
+ * Renders each contact from an array of contacts
+ * @param {array} contacts 
+ */
 function render(contacts) {
   const contactSection = document.querySelector("#contacts");
   contactSection.innerHTML = "";
-  
-  if (contacts) {
-    const content = contacts.map(renderContact).join("");
-    contactSection.innerHTML = content;    
-  }
-  loadCities(contacts); 
+
+  if (contacts) {  
+    contactSection.innerHTML = contacts.map(renderContact).join("");
+  };
+  loadCities(contacts);
 }
 
+/**
+ * Filters contacts by city
+ * @param {string} city - Selected city
+ * @return {array} - Contacts matching city
+ */
 function filterByCity(city) {
-  return window.contacts.filter(contact => contact.address.city === city);
+  return window.contacts.filter((contact) => contact.address.city === city);
 }
 
+/**
+ * Renders HTML of contacts filtered by city
+ * @param {event} - Changed selection of #filterOptions dropdown menu
+ */
 const filterHandler = (event) => {
   event.preventDefault();
   const selection = event.target.value;
-    
+
   if (selection === 0) {
     render(window.contacts);
   } else {
     const filteredContacts = filterByCity(selection);
     render(filteredContacts);
-  };
-}
+  }
+};
 
-function loadCities(contacts) {
-  const selectCities = document.querySelector("#filterOptions");
-  selectCities.innerHTML = "";
-
-  const defaultOption = document.createElement("option");
-  defaultOption.setAttribute("value", 0);
-  defaultOption.innerText = "-- Select a city --";
-  selectCities.appendChild(defaultOption);
+/**
+ * Populates #filterOptions dropdown menu with contacts' cities
+ * @param {array} contacts 
+ */
+ function loadCities(contacts) {
+  const filterOptions = document.querySelector("#filterOptions");
+  filterOptions.innerHTML = `<option value="0">-- Select a city --</option>`;
 
   if (!contacts.length) return;
 
   let cities = contacts.map(contact => contact.address.city);
   const uniqueCities = new Set(cities);
-
+  
   for (let city of uniqueCities) {
-    const cityOption = document.createElement("option");
-    cityOption.setAttribute("value", `${city}`);
-    cityOption.innerText = city;
-    selectCities.appendChild(cityOption);
-  };
+    filterOptions.innerHTML += `<option value="${city}">${city}</option>`;
+  }
 }
 
+/**
+ * Deletes a contact by ID
+ * @param {number} id 
+ */
 function deleteContact(id) {
-  window.contacts = window.contacts.filter(contact => contact.id != id);
+  window.contacts = window.contacts.filter((contact) => contact.id != id);
 }
 
+/**
+ * Deletes a contact and re-renders contacts
+ * @param {event} - Clicked delete button 
+ */
 const deleteButtonHandler = (event) => {
   event.preventDefault();
-  const cardID = event.target.parentElement.getAttribute("data-id");
+
+  const card = event.target.parentElement;
+  const section = card.parentElement;
+  section.removeChild(card);
+
+  const cardID = card.getAttribute("data-id");
   deleteContact(cardID);
-  render(window.contacts);
-}
+};
 
 function main() {
   render(window.contacts);
@@ -363,7 +384,7 @@ function main() {
   citySelector.addEventListener("change", filterHandler);
 
   const deleteBtns = document.querySelectorAll(".deleteBtn");
-  deleteBtns.forEach(deleteBtn => {
+  deleteBtns.forEach((deleteBtn) => {
     deleteBtn.addEventListener("click", deleteButtonHandler);
   });
 }
