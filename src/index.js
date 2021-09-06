@@ -254,14 +254,14 @@ function titleCase(city) {
 }
 
 /**
- * Renders a single contact object
- * @param {object} contact 
- * @return {string} - String literal containing html
+ * Renders a single contact 
+ * @param {object} contact - Contact information
+ * @return {string} - String literal to render contact card
  */
 function renderContact(contact) {
   const { id, name, email, picture, address, phone, website, company } =
     contact;
-  // address.city = titleCase(address.city);
+  address.city = titleCase(address.city);
 
   const content = `
     <div class="card" data-id="${id}">
@@ -299,7 +299,7 @@ function renderContact(contact) {
 
 /**
  * Renders each contact from an array of contacts
- * @param {array} contacts 
+ * @param {array} contacts - Contact list
  */
 function render(contacts) {
   const contactSection = document.querySelector("#contacts");
@@ -314,7 +314,7 @@ function render(contacts) {
 /**
  * Filters contacts by city
  * @param {string} city - Selected city
- * @return {array} - Contacts matching city
+ * @return {array} - All contacts located in selected city
  */
 function filterByCity(city) {
   return window.contacts.filter((contact) => contact.address.city === city);
@@ -322,7 +322,7 @@ function filterByCity(city) {
 
 /**
  * Renders HTML of contacts filtered by city
- * @param {event} - Changed selection of #filterOptions dropdown menu
+ * @param {event} - Selection change event in #filterOptions dropdown menu
  */
 const filterHandler = (event) => {
   event.preventDefault();
@@ -337,7 +337,7 @@ const filterHandler = (event) => {
 };
 
 /**
- * Populates #filterOptions dropdown menu with contacts' cities
+ * Populates #filterOptions dropdown menu with cities of all contacts
  * @param {array} contacts 
  */
  function loadCities(contacts) {
@@ -355,7 +355,7 @@ const filterHandler = (event) => {
 }
 
 /**
- * Deletes a contact by ID
+ * Deletes a contact by ID number
  * @param {number} id 
  */
 function deleteContact(id) {
@@ -363,8 +363,8 @@ function deleteContact(id) {
 }
 
 /**
- * Deletes a contact and re-renders contacts
- * @param {event} - Clicked delete button 
+ * Removes rendered contact card and deletes contact from contact list
+ * @param {event} - Click event on contact's delete button 
  */
 const deleteButtonHandler = (event) => {
   event.preventDefault();
