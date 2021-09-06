@@ -246,15 +246,17 @@ window.contacts = [
 function titleCase(city) {
   const cityNameArr = city.split(" ");
   let titleCaseCity = [];
+
   for (let word of cityNameArr) {
     word = word[0].toUpperCase() + word.slice(1, word.length);
     titleCaseCity.push(word);
   }
+
   return titleCaseCity.join(" ");
 }
 
 /**
- * Renders a single contact 
+ * Renders a single contact
  * @param {object} contact - Contact information
  * @return {string} - String literal to render contact card
  */
@@ -305,9 +307,9 @@ function render(contacts) {
   const contactSection = document.querySelector("#contacts");
   contactSection.innerHTML = "";
 
-  if (contacts) {  
+  if (contacts) {
     contactSection.innerHTML = contacts.map(renderContact).join("");
-  };
+  }
   loadCities(contacts);
 }
 
@@ -317,7 +319,7 @@ function render(contacts) {
  * @return {array} - All contacts located in selected city
  */
 function filterByCity(city) {
-  return window.contacts.filter((contact) => contact.address.city === city);
+  return contacts.filter((contact) => contact.address.city === city);
 }
 
 /**
@@ -326,29 +328,28 @@ function filterByCity(city) {
  */
 const filterHandler = (event) => {
   event.preventDefault();
-  const selection = event.target.value;
+  const selectedCity = event.target.value;
 
-  if (selection === 0) {
-    render(window.contacts);
+  if (selectedCity === 0) {
+    render(contacts);
   } else {
-    const filteredContacts = filterByCity(selection);
-    render(filteredContacts);
+    render(filterByCity(selectedCity));
   }
-};
+}
 
 /**
  * Populates #filterOptions dropdown menu with cities of all contacts
- * @param {array} contacts 
+ * @param {array} contacts
  */
- function loadCities(contacts) {
+function loadCities(contacts) {
   const filterOptions = document.querySelector("#filterOptions");
   filterOptions.innerHTML = `<option value="0">-- Select a city --</option>`;
 
   if (!contacts.length) return;
 
-  let cities = contacts.map(contact => contact.address.city);
+  let cities = contacts.map((contact) => contact.address.city);
   const uniqueCities = new Set(cities);
-  
+
   for (let city of uniqueCities) {
     filterOptions.innerHTML += `<option value="${city}">${city}</option>`;
   }
@@ -356,15 +357,15 @@ const filterHandler = (event) => {
 
 /**
  * Deletes a contact by ID number
- * @param {number} id 
+ * @param {number} id
  */
 function deleteContact(id) {
-  window.contacts = window.contacts.filter((contact) => contact.id != id);
+  contacts = contacts.filter((contact) => contact.id != id);
 }
 
 /**
  * Removes rendered contact card and deletes contact from contact list
- * @param {event} - Click event on contact's delete button 
+ * @param {event} - Click event on contact's delete button
  */
 const deleteButtonHandler = (event) => {
   event.preventDefault();
@@ -375,7 +376,7 @@ const deleteButtonHandler = (event) => {
 
   const cardID = card.getAttribute("data-id");
   deleteContact(cardID);
-};
+}
 
 function main() {
   render(window.contacts);
