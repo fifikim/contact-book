@@ -333,7 +333,8 @@ const filterHandler = (event) => {
   if (selectedCity === 0) {
     render(contacts);
   } else {
-    render(filterByCity(selectedCity));
+    const contactsInCity = filterByCity(selectedCity);
+    render(contactsInCity);
   }
 }
 
@@ -347,7 +348,7 @@ function loadCities(contacts) {
 
   if (!contacts.length) return;
 
-  let cities = contacts.map((contact) => contact.address.city);
+  const cities = contacts.map((contact) => contact.address.city);
   const uniqueCities = new Set(cities);
 
   for (let city of uniqueCities) {
@@ -364,18 +365,18 @@ function deleteContact(id) {
 }
 
 /**
- * Removes rendered contact card and deletes contact from contact list
+ * Removes rendered contact and deletes contact from contact list
  * @param {event} - Click event on contact's delete button
  */
 const deleteButtonHandler = (event) => {
   event.preventDefault();
 
-  const card = event.target.parentElement;
-  const section = card.parentElement;
-  section.removeChild(card);
+  const contact = event.target.parentElement;
+  const section = contact.parentElement;
+  section.removeChild(contact);
 
-  const cardID = card.getAttribute("data-id");
-  deleteContact(cardID);
+  const contactID = contact.getAttribute("data-id");
+  deleteContact(contactID);
 }
 
 function main() {
